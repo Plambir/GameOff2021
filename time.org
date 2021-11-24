@@ -1,0 +1,5 @@
+* Time
+  :LOGBOOK:
+  CLOCK: [2021-11-25 Thu 00:09]
+  :END:
+  
