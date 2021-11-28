@@ -1,6 +1,6 @@
 extends KinematicBody
 
-const FORWARD = Vector3(0, 0, -80)
+const FORWARD = Vector3(0, 0, -100)
 
 func _physics_process(delta):
 	if not visible:
