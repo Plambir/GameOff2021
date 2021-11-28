@@ -2,6 +2,7 @@ extends KinematicBody
 
 var __velocity : Vector3
 
+var speed_boost = 1
 const SPEED = 0.5
 const MAX_SPEED = 0.5
 
@@ -38,7 +39,7 @@ func __get_input(delta):
 	__velocity.y = clamp(__velocity.y, -MAX_SPEED, MAX_SPEED)
 	__velocity.z = clamp(__velocity.z, -MAX_SPEED, MAX_SPEED)
 
-	return __velocity
+	return __velocity * speed_boost
 
 func _physics_process(delta):
 	var velocity = __get_input(delta)
