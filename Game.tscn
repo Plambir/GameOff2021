@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://scripts/Player.gd" type="Script" id=1]
 [ext_resource path="res://scripts/RockGenerator.gd" type="Script" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://scripts/Game.gd" type="Script" id=11]
 [ext_resource path="res://assets/butterfly.glb" type="PackedScene" id=12]
 [ext_resource path="res://scripts/butterfly.gd" type="Script" id=13]
+[ext_resource path="res://assets/planet.png" type="Texture" id=14]
 
 [sub_resource type="SpatialMaterial" id=14]
 flags_transparent = true
@@ -134,44 +135,6 @@ shader = SubResource( 11 )
 material = SubResource( 9 )
 size = Vector2( 2, 2 )
 
-[sub_resource type="VisualShaderNodeColorConstant" id=3]
-constant = Color( 1, 0, 0, 1 )
-
-[sub_resource type="VisualShader" id=4]
-code = "shader_type spatial;
-render_mode specular_schlick_ggx;
-
-
-
-
-void vertex() {
-// Output:0
-
-}
-
-void fragment() {
-// Color:2
-	vec3 n_out2p0 = vec3(1.000000, 0.000000, 0.000000);
-	float n_out2p1 = 1.000000;
-
-// Output:0
-	ALBEDO = n_out2p0;
-
-}
-
-void light() {
-// Output:0
-
-}
-"
-graph_offset = Vector2( -53, 83 )
-nodes/fragment/2/node = SubResource( 3 )
-nodes/fragment/2/position = Vector2( 160, 180 )
-nodes/fragment/connections = PoolIntArray( 2, 0, 0, 0 )
-
-[sub_resource type="ShaderMaterial" id=5]
-shader = SubResource( 4 )
-
 [sub_resource type="SphereShape" id=1]
 radius = 0.5
 
@@ -193,6 +156,14 @@ dof_blur_near_distance = 13.74
 
 [sub_resource type="SphereShape" id=12]
 radius = 17.5
+
+[sub_resource type="SpatialMaterial" id=22]
+albedo_texture = ExtResource( 14 )
+emission_enabled = true
+emission = Color( 0.752941, 0.537255, 0.537255, 1 )
+emission_energy = 0.5
+emission_operator = 0
+emission_on_uv2 = false
 
 [node name="Spatial" type="Spatial"]
 script = ExtResource( 11 )
@@ -249,11 +220,6 @@ hue_variation_random = 0.74
 [node name="Player" type="KinematicBody" parent="."]
 script = ExtResource( 1 )
 
-[node name="CSGSphere" type="CSGSphere" parent="Player"]
-visible = false
-rings = 12
-material = SubResource( 5 )
-
 [node name="butterfly" parent="Player" instance=ExtResource( 12 )]
 transform = Transform( -1, 0, -8.74228e-08, 6.18172e-08, 0.707107, -0.707107, 6.18172e-08, -0.707107, -0.707107, 0, 0, 0 )
 script = ExtResource( 13 )
@@ -298,6 +264,7 @@ transform = Transform( 4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0 )
 radius = 4.5
 radial_segments = 14
 rings = 14
+material = SubResource( 22 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
