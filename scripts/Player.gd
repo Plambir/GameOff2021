@@ -1,5 +1,7 @@
 extends KinematicBody
 
+signal die
+
 var __velocity : Vector3
 
 var speed_boost = 1
@@ -51,4 +53,5 @@ func _physics_process(delta):
 
 func _on_Area_body_entered(body):
 	body.queue_free()
-	get_tree().reload_current_scene()
+	emit_signal("die")
+	#get_tree().reload_current_scene()

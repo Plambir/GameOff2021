@@ -1,19 +1,19 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=27 format=2]
 
-[ext_resource path="res://scripts/Player.gd" type="Script" id=1]
+[ext_resource path="res://assets/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/RockGenerator.gd" type="Script" id=2]
 [ext_resource path="res://scripts/Rock.gd" type="Script" id=3]
 [ext_resource path="res://scenes/Title.tscn" type="PackedScene" id=4]
 [ext_resource path="res://assets/cylinder.obj" type="ArrayMesh" id=5]
-[ext_resource path="res://scripts/Camera.gd" type="Script" id=6]
+[ext_resource path="res://assets/InterpolatedCamera.tscn" type="PackedScene" id=6]
 [ext_resource path="res://assets/tex1.png" type="Texture" id=7]
 [ext_resource path="res://scripts/Cylinder.gd" type="Script" id=8]
 [ext_resource path="res://assets/tex2.png" type="Texture" id=9]
 [ext_resource path="res://assets/particle.png" type="Texture" id=10]
 [ext_resource path="res://scripts/Game.gd" type="Script" id=11]
-[ext_resource path="res://assets/butterfly.glb" type="PackedScene" id=12]
-[ext_resource path="res://scripts/butterfly.gd" type="Script" id=13]
 [ext_resource path="res://assets/planet.png" type="Texture" id=14]
+[ext_resource path="res://assets/font.tres" type="DynamicFont" id=15]
+[ext_resource path="res://scripts/Score.gd" type="Script" id=16]
 
 [sub_resource type="SpatialMaterial" id=14]
 flags_transparent = true
@@ -135,25 +135,6 @@ shader = SubResource( 11 )
 material = SubResource( 9 )
 size = Vector2( 2, 2 )
 
-[sub_resource type="SphereShape" id=1]
-radius = 0.5
-
-[sub_resource type="SphereShape" id=13]
-radius = 0.9
-
-[sub_resource type="PanoramaSky" id=16]
-panorama = ExtResource( 9 )
-
-[sub_resource type="Environment" id=6]
-background_mode = 2
-background_sky = SubResource( 16 )
-background_energy = 7.94
-ambient_light_color = Color( 1, 1, 1, 1 )
-fog_enabled = true
-fog_color = Color( 0.372549, 0.372549, 0.372549, 1 )
-dof_blur_far_distance = 88.79
-dof_blur_near_distance = 13.74
-
 [sub_resource type="SphereShape" id=12]
 radius = 17.5
 
@@ -196,9 +177,11 @@ anims/RESET = SubResource( 20 )
 anims/idle = SubResource( 21 )
 
 [node name="CPUParticles" type="CPUParticles" parent="."]
+pause_mode = 2
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 232.079 )
 amount = 800
 lifetime = 40.0
+preprocess = 60.0
 local_coords = false
 mesh = SubResource( 8 )
 emission_shape = 5
@@ -217,31 +200,9 @@ scale_amount_random = 0.51
 hue_variation = 0.28
 hue_variation_random = 0.74
 
-[node name="Player" type="KinematicBody" parent="."]
-script = ExtResource( 1 )
+[node name="Player" parent="." instance=ExtResource( 1 )]
 
-[node name="butterfly" parent="Player" instance=ExtResource( 12 )]
-transform = Transform( -1, 0, -8.74228e-08, 6.18172e-08, 0.707107, -0.707107, 6.18172e-08, -0.707107, -0.707107, 0, 0, 0 )
-script = ExtResource( 13 )
-
-[node name="CollisionShape" type="CollisionShape" parent="Player"]
-shape = SubResource( 1 )
-
-[node name="Area" type="Area" parent="Player"]
-collision_layer = 0
-collision_mask = 2
-
-[node name="CollisionShape" type="CollisionShape" parent="Player/Area"]
-shape = SubResource( 13 )
-
-[node name="InterpolatedCamera" type="InterpolatedCamera" parent="."]
-transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, -8.8662 )
-environment = SubResource( 6 )
-doppler_tracking = 2
-current = true
-far = 300.0
-script = ExtResource( 6 )
-target_path = NodePath("../Player")
+[node name="InterpolatedCamera" parent="." instance=ExtResource( 6 )]
 
 [node name="RockGenerator" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 455.795 )
@@ -270,6 +231,16 @@ material = SubResource( 22 )
 
 [node name="TitleScreen" parent="CanvasLayer" instance=ExtResource( 4 )]
 
+[node name="Score" type="Label" parent="CanvasLayer"]
+anchor_right = 1.0
+margin_bottom = 14.0
+custom_fonts/font = ExtResource( 15 )
+align = 1
+script = ExtResource( 16 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Sprite3D" type="Sprite3D" parent="."]
 transform = Transform( 20.589, 0, 0, 0, 20.589, 0, 0, 0, 1, 0, 0, 270.238 )
 visible = false
@@ -277,6 +248,8 @@ texture = ExtResource( 9 )
 script = ExtResource( 8 )
 rot = 0.01
 
-[connection signal="body_entered" from="Player/Area" to="Player" method="_on_Area_body_entered"]
+[connection signal="die" from="Player" to="." method="_on_Player_die"]
+[connection signal="die" from="Player" to="CanvasLayer/Score" method="_on_Player_die"]
 [connection signal="spawn" from="RockGenerator" to="." method="_on_RockGenerator_spawn"]
+[connection signal="spawn" from="RockGenerator" to="CanvasLayer/Score" method="_on_RockGenerator_spawn"]
 [connection signal="timeout" from="RockGenerator/Timer" to="RockGenerator" method="_on_Timer_timeout"]
