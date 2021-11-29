@@ -22,11 +22,12 @@ _global_script_class_icons={
 
 config/name="BugGameForGameOff2021"
 run/main_scene="res://Game.tscn"
-config/icon="res://icon.png"
+config/icon="res://assets/planet.png"
 
 [autoload]
 
 Storage="*res://scripts/Storage.gd"
+BackgroundMusic="*res://assets/BackgroundMusic.tscn"
 
 [display]
 

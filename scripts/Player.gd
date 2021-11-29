@@ -52,6 +52,8 @@ func _physics_process(delta):
 		translation = pos
 
 func _on_Area_body_entered(body):
-	body.queue_free()
+	$AudioStreamPlayer.play()
+	hide()
+	yield($AudioStreamPlayer, "finished")
 	emit_signal("die")
 	#get_tree().reload_current_scene()
